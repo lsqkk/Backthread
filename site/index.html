@@ -23,31 +23,29 @@
       <div class="intro">
         <p class="platform">Windows 11 <span></span> x64</p>
         <h1 id="headline">插曲结束。<br><em>接着刚才做。</em></h1>
-        <p class="summary">回完消息、查完资料，按 <kbd>Ctrl+Alt+J</kbd> 呼出浮窗。回线帮你找到中断前的那扇窗口。</p>
+        <p class="summary">回完消息、查完资料，按 <kbd>Ctrl+Alt+J</kbd> 直接回到刚才的窗口。离开前按 <kbd>Ctrl+Alt+K</kbd>，就会优先回到你标记的那一扇。</p>
         <div class="hero-actions">
           <a class="cta" href="https://github.com/lsqkk/Backthread/releases/latest">下载 Windows 版 <span aria-hidden="true">↓</span></a>
-          <a class="secondary" href="#demo">试试浮窗 <span aria-hidden="true">↘</span></a>
+          <a class="secondary" href="#demo">试试直接返回 <span aria-hidden="true">↘</span></a>
         </div>
       </div>
 
       <div class="preview" id="demo">
         <div class="surface" aria-hidden="true">
           <div class="mock-window back-window"><div></div><div></div><div></div></div>
-          <div class="mock-window front-window"><span id="mock-title">资料检索 · 浏览器</span><i></i><i></i><i></i><i></i></div>
+          <div class="mock-window front-window"><span id="mock-title">年度方案 · 文档</span><i></i><i></i><i></i><i></i></div>
         </div>
-        <section class="palette" aria-label="快速切换交互演示">
-          <header class="palette-head"><span class="mark" aria-hidden="true">↶</span><strong>回线</strong><span class="sample">交互演示</span></header>
-          <label class="search"><span aria-hidden="true">⌕</span><input id="query" type="search" placeholder="搜索窗口或应用" aria-label="搜索示例窗口"></label>
-          <div class="pills" role="group" aria-label="结果来源">
-            <button type="button" id="recent" aria-pressed="true">最近窗口</button>
-            <button type="button" id="stack" aria-pressed="false">复工栈</button>
+        <section class="palette" aria-label="窗口返回演示">
+          <header class="palette-head"><span class="mark" aria-hidden="true">↶</span><strong>试试按键效果</strong></header>
+          <div class="results" aria-label="示例窗口">
+            <button class="result" type="button" data-window="年度方案 · 文档" aria-current="true"><span class="result-symbol" aria-hidden="true">▤</span><strong>年度方案 · 文档</strong></button>
+            <button class="result" type="button" data-window="项目对话 · 聊天"><span class="result-symbol" aria-hidden="true">◇</span><strong>项目对话 · 聊天</strong></button>
+            <button class="result" type="button" data-window="资料检索 · 浏览器"><span class="result-symbol" aria-hidden="true">◫</span><strong>资料检索 · 浏览器</strong></button>
           </div>
-          <div id="results" class="results">
-            <noscript><p class="empty">启用 JavaScript 体验搜索和窗口切换。</p></noscript>
-          </div>
+          <p class="demo-feedback" id="feedback" role="status">正在使用「年度方案 · 文档」。</p>
           <footer class="palette-foot">
-            <output id="feedback" aria-live="polite">↑ ↓ 选择 · ↵ 返回</output>
-            <button id="select" type="button">返回 <span aria-hidden="true">↵</span></button>
+            <button class="demo-mark" id="mark-window" type="button"><kbd>Ctrl+Alt+K</kbd> 标记</button>
+            <button id="return-window" type="button"><kbd>Ctrl+Alt+J</kbd> 返回</button>
           </footer>
         </section>
       </div>
@@ -62,15 +60,15 @@
         <dl class="scenarios">
           <div>
             <dt>临时处理完，回原窗口</dt>
-            <dd><kbd>Ctrl+Alt+J</kbd> 呼出后直接回车。也可以搜索应用名或窗口标题，选中你要的那一扇。</dd>
+            <dd><kbd>Ctrl+Alt+J</kbd> 直接回到标记窗口、先前专注处理的窗口或上一个窗口。</dd>
           </div>
           <div>
-            <dt>出发之前，先留个检查点</dt>
-            <dd><kbd>Ctrl+Alt+K</kbd> 记住当前窗口。在浮窗按 <kbd>Ctrl+Tab</kbd> 切到复工栈，按最近留下的顺序接回任务。</dd>
+            <dt>离开之前，标记当前窗口</dt>
+            <dd><kbd>Ctrl+Alt+K</kbd> 标记这扇窗口。处理完插曲，按 <kbd>Ctrl+Alt+J</kbd> 就能回去。再标记一次会更新目标。</dd>
           </div>
           <div>
             <dt>掌控什么时候记录</dt>
-            <dd>从托盘暂停或退出，在工作台清空本次会话。窗口标题、停留时长和备注只留在内存中。</dd>
+            <dd>从托盘暂停或退出，在工作台清空本次会话。窗口标题、停留时长和标记只留在内存中。</dd>
           </div>
         </dl>
       </div>

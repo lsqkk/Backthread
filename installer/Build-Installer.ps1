@@ -3,7 +3,7 @@ param(
     [Parameter(Mandatory = $true)][string]$PublishDir,
     [Parameter(Mandatory = $true)][string]$OutputDir,
     [string]$IsccPath,
-    [ValidatePattern('^\d+\.\d+\.\d+$')][string]$Version = '1.1.0'
+    [ValidatePattern('^\d+\.\d+\.\d+$')][string]$Version = '1.1.1'
 )
 
 $ErrorActionPreference = 'Stop'

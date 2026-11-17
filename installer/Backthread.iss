@@ -1,8 +1,8 @@
-﻿#ifndef PublishDir
+#ifndef PublishDir
   #error Pass /DPublishDir with the absolute path to the self-contained win-x64 publish directory.
 #endif
 #ifndef BuildVersion
-  #define BuildVersion "1.1.0"
+  #define BuildVersion "1.1.1"
 #endif
 
 [Setup]

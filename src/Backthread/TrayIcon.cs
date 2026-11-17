@@ -2,7 +2,7 @@ using System.Runtime.InteropServices;
 
 namespace Backthread;
 
-internal enum TrayAction { Switch = 1, Dashboard, Pause, Exit }
+internal enum TrayAction { Dashboard = 1, Pause, Exit }
 
 internal sealed class TrayIcon : IDisposable
 {
@@ -45,7 +45,7 @@ internal sealed class TrayIcon : IDisposable
             return true;
         }
         if (message != CallbackMessage) return false;
-        if ((int)lParam == 0x0202) Invoked?.Invoke(TrayAction.Switch);
+        if ((int)lParam == 0x0202) Invoked?.Invoke(TrayAction.Dashboard);
         if ((int)lParam == 0x0205) ShowMenu();
         return true;
     }
@@ -73,7 +73,6 @@ internal sealed class TrayIcon : IDisposable
         uint selected = 0;
         try
         {
-            AppendMenu(menu, 0, (uint)TrayAction.Switch, "快速切换");
             AppendMenu(menu, 0, (uint)TrayAction.Dashboard, "打开工作台");
             AppendMenu(menu, 0, (uint)TrayAction.Pause, paused ? "恢复记录" : "暂停记录");
             AppendMenu(menu, 0x800, 0, null);

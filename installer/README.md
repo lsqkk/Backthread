@@ -10,7 +10,7 @@ dotnet publish .\src\Backthread\Backthread.csproj -c Release -r win-x64 --self-c
   -IsccPath 'C:\Program Files (x86)\Inno Setup 6\ISCC.exe'
 ```
 
-也可通过环境变量 `INNO_ISCC` 提供编译器路径；支持在 `PATH` 和常见安装位置查找已安装编译器。若只想获得本地编译器，可使用 [Inno Setup 官方便携模式](https://jrsoftware.org/inno-setup/documentation/topic_technotes.htm)，并将 `-IsccPath` 指向便携目录中的 `ISCC.exe`。`-Version` 默认是 `1.1.0`，发布新版时应与项目版本一起更新。输出目录须在发布目录之外。构建脚本同时生成安装 EXE 和对应的 `.sha256` 校验文件。
+也可通过环境变量 `INNO_ISCC` 提供编译器路径；支持在 `PATH` 和常见安装位置查找已安装编译器。若只想获得本地编译器，可使用 [Inno Setup 官方便携模式](https://jrsoftware.org/inno-setup/documentation/topic_technotes.htm)，并将 `-IsccPath` 指向便携目录中的 `ISCC.exe`。`-Version` 默认是 `1.1.1`，发布新版时应与项目版本一起更新。输出目录须在发布目录之外。构建脚本同时生成安装 EXE 和对应的 `.sha256` 校验文件。
 
 安装面向 Windows 11 x64 的当前账户，固定目录为 `%LOCALAPPDATA%\Programs\Backthread`，从开始菜单的「回线 Backthread」进入。可在回线设置中启用开机启动，卸载时会移除该启动项。安装完成页面可以勾选启动回线；静默安装时不启动。覆盖安装时，安装向导可请求 Windows 正常关闭占用安装文件的回线；卸载时若回线还开着，请先从托盘选择「退出回线」，再重试。会话中的轨迹和返回点随回线退出消失。
 

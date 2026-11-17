@@ -82,6 +82,9 @@ internal sealed class NativeDesktop : IDisposable
 
     public LiveWindow? GetForeground() => _disposed ? null : Describe(GetForegroundWindow());
 
+    internal bool IsForeground(LiveWindow window) =>
+        GetAncestor(GetForegroundWindow(), GaRoot) == window.Handle && IsAlive(window);
+
     internal bool ChangeShortcut(bool checkpoint, char previous, char next)
     {
         if (!_subclassed || _disposed) return false;

@@ -75,61 +75,6 @@
             </ResourceDictionary>
         </Grid.Resources>
 
-        <Grid x:Name="Palette" RowSpacing="12" Padding="19,15,19,15" Visibility="Collapsed"
-            Background="{ThemeResource CanvasBrush}">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-            <Grid ColumnSpacing="10">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="34" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-                <Border Height="32" CornerRadius="8" Background="{ThemeResource TintBrush}">
-                    <FontIcon Glyph="&#xE7A7;" FontSize="15" Foreground="{ThemeResource BrandBrush}" />
-                </Border>
-                <TextBlock Grid.Column="1" Text="回线" FontSize="19" FontWeight="SemiBold" VerticalAlignment="Center" />
-                <Button Grid.Column="2" Content="工作台" Click="OpenWorkspaceClick" />
-                <Button Grid.Column="3" Click="ClosePaletteClick" AutomationProperties.Name="关闭快速切换">
-                    <FontIcon Glyph="&#xE711;" FontSize="12" />
-                </Button>
-            </Grid>
-            <TextBox x:Name="Query" Grid.Row="1" PlaceholderText="搜索窗口、应用或备注" TextChanged="SearchChanged"
-                AutomationProperties.Name="搜索窗口、应用或备注" />
-            <Grid Grid.Row="2">
-                <StackPanel Orientation="Horizontal" Spacing="8">
-                    <ToggleButton x:Name="RecentTab" Content="最近窗口" Click="RecentClick" IsChecked="True" />
-                    <ToggleButton x:Name="StackTab" Content="复工栈" Click="StackClick" />
-                </StackPanel>
-                <TextBlock x:Name="PaletteCount" HorizontalAlignment="Right" VerticalAlignment="Center" Style="{StaticResource Muted}" FontSize="12" />
-            </Grid>
-            <Border Grid.Row="3" Style="{StaticResource Card}" Padding="4">
-                <Grid>
-                    <ListView x:Name="PaletteList" IsItemClickEnabled="True" ItemClick="PaletteItemClick"
-                        SelectionChanged="PaletteSelectionChanged" ItemTemplate="{StaticResource ResultTemplate}" ItemContainerStyle="{StaticResource ResultContainer}"
-                        AutomationProperties.Name="窗口切换结果" />
-                    <TextBlock x:Name="PaletteEmpty" Margin="22" VerticalAlignment="Center" HorizontalAlignment="Center"
-                        TextAlignment="Center" Style="{StaticResource Muted}" IsHitTestVisible="False" />
-                </Grid>
-            </Border>
-            <Grid Grid.Row="4" ColumnSpacing="10">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-                <TextBlock x:Name="PaletteStatus" Style="{StaticResource Muted}" FontSize="12" VerticalAlignment="Center"
-                    AutomationProperties.LiveSetting="Polite" />
-                <Button x:Name="PaletteReturn" Grid.Column="1" Content="返回  ↵" Click="PaletteReturnClick"
-                    Style="{StaticResource AccentButtonStyle}" />
-            </Grid>
-        </Grid>
-
         <Grid x:Name="Workspace" Padding="0,10,0,0" Background="{ThemeResource CanvasBrush}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="190" />
@@ -153,8 +98,7 @@
                     </StackPanel>
                     <ListView x:Name="Navigation" Grid.Row="1" SelectionChanged="Navigate" SelectedIndex="0"
                         ItemContainerStyle="{StaticResource ResultContainer}" AutomationProperties.Name="工作台导航">
-                        <ListViewItem><StackPanel Orientation="Horizontal" Spacing="10"><FontIcon Glyph="&#xE81C;" FontSize="15"/><TextBlock Text="窗口轨迹"/></StackPanel></ListViewItem>
-                        <ListViewItem><StackPanel Orientation="Horizontal" Spacing="10"><FontIcon Glyph="&#xE718;" FontSize="15"/><TextBlock Text="复工栈"/></StackPanel></ListViewItem>
+                        <ListViewItem><StackPanel Orientation="Horizontal" Spacing="10"><FontIcon Glyph="&#xE81C;" FontSize="15"/><TextBlock Text="最近窗口"/></StackPanel></ListViewItem>
                         <ListViewItem><StackPanel Orientation="Horizontal" Spacing="10"><FontIcon Glyph="&#xE713;" FontSize="15"/><TextBlock Text="设置"/></StackPanel></ListViewItem>
                         <ListViewItem><StackPanel Orientation="Horizontal" Spacing="10"><FontIcon Glyph="&#xE946;" FontSize="15"/><TextBlock Text="关于"/></StackPanel></ListViewItem>
                     </ListView>
@@ -177,64 +121,27 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <TextBlock x:Name="PageHeading" Style="{StaticResource PageTitle}" />
-                    <Button x:Name="WorkspaceQuick" Grid.Column="1" VerticalAlignment="Center" Click="OpenPaletteClick" />
                 </Grid>
 
-                <Grid x:Name="HistoryPage" Grid.Row="1" RowSpacing="13">
+                <Grid x:Name="HistoryPage" Grid.Row="1" RowSpacing="12" PreviewKeyDown="HistoryKeyDown">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
-                    <Border Style="{StaticResource Card}" Background="{ThemeResource TintBrush}">
-                        <Grid ColumnSpacing="12">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            <StackPanel Spacing="5">
-                                <TextBlock x:Name="SuggestionHeading" FontSize="12" Foreground="{ThemeResource BrandBrush}" />
-                                <TextBlock x:Name="SuggestionTitle" FontSize="19" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" />
-                                <TextBlock x:Name="SuggestionDetail" Style="{StaticResource Muted}" FontSize="12" />
-                            </StackPanel>
-                            <Button x:Name="SuggestionButton" Grid.Column="1" Content="返回窗口" VerticalAlignment="Center"
-                                Click="ReturnSuggestion" Style="{StaticResource AccentButtonStyle}" />
-                        </Grid>
-                    </Border>
-                    <TextBlock x:Name="HistoryHeading" Grid.Row="1" Text="最近切换" FontWeight="SemiBold" />
+                    <TextBlock x:Name="ShortcutHint" Style="{StaticResource Muted}" />
+                    <TextBox x:Name="HistoryQuery" Grid.Row="1" PlaceholderText="按标题或应用搜索"
+                        AutomationProperties.Name="搜索最近窗口" TextChanged="HistorySearchChanged" />
                     <Border Grid.Row="2" Style="{StaticResource Card}" Padding="4">
                         <Grid>
                             <ListView x:Name="HistoryList" IsItemClickEnabled="True" SelectionMode="None"
-                                ItemClick="HistoryItemClick" KeyDown="HistoryKeyDown" ItemTemplate="{StaticResource ResultTemplate}" ItemContainerStyle="{StaticResource ResultContainer}"
-                                AutomationProperties.Name="窗口轨迹，回车返回所选窗口" />
-                            <TextBlock x:Name="HistoryEmpty" Text="切换几个窗口后，就能从这里返回。" HorizontalAlignment="Center"
-                                VerticalAlignment="Center" Style="{StaticResource Muted}" IsHitTestVisible="False" />
-                        </Grid>
-                    </Border>
-                </Grid>
-
-                <Grid x:Name="CheckpointsPage" Grid.Row="1" RowSpacing="12" Visibility="Collapsed">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="*" />
-                    </Grid.RowDefinitions>
-                    <TextBlock x:Name="CheckpointHint" Style="{StaticResource Muted}" />
-                    <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="8">
-                        <Button x:Name="ResumeButton" Content="返回栈顶" Click="ResumeClick" Style="{StaticResource AccentButtonStyle}" />
-                        <Button x:Name="NoteButton" Content="为刚才的窗口留线" Click="ComposeClick" />
-                        <Button x:Name="DiscardButton" Content="移除栈顶" Click="DiscardClick" />
-                    </StackPanel>
-                    <Border Grid.Row="2" Padding="4" Style="{StaticResource Card}">
-                        <Grid>
-                            <ListView x:Name="CheckpointList" SelectionMode="None" ItemTemplate="{StaticResource ResultTemplate}"
-                                ItemContainerStyle="{StaticResource ResultContainer}" AutomationProperties.Name="复工检查点" />
-                            <TextBlock x:Name="CheckpointEmpty" Text="还没有检查点。" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                ItemClick="HistoryItemClick" ItemTemplate="{StaticResource ResultTemplate}" ItemContainerStyle="{StaticResource ResultContainer}"
+                                AutomationProperties.Name="最近窗口" />
+                            <TextBlock x:Name="HistoryEmpty" HorizontalAlignment="Center" VerticalAlignment="Center"
                                 Style="{StaticResource Muted}" IsHitTestVisible="False" />
                         </Grid>
                     </Border>
                 </Grid>
-
                 <ScrollViewer x:Name="SettingsPage" Grid.Row="1" Visibility="Collapsed">
                     <StackPanel Spacing="14">
                         <TextBlock Text="快捷键" FontSize="17" FontWeight="SemiBold" />
@@ -242,18 +149,18 @@
                             <StackPanel Spacing="10">
                                 <Grid ColumnSpacing="10">
                                     <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
-                                    <TextBlock Text="呼出快速切换" VerticalAlignment="Center" />
+                                    <TextBlock Text="直接返回窗口" VerticalAlignment="Center" />
                                     <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8">
                                         <TextBlock Text="Ctrl + Alt +" VerticalAlignment="Center" Style="{StaticResource Muted}"/>
-                                        <ComboBox x:Name="SwitchKey" Width="66" SelectionChanged="SwitchKeyChanged" AutomationProperties.Name="快速切换按键" />
+                                        <ComboBox x:Name="SwitchKey" Width="66" SelectionChanged="SwitchKeyChanged" AutomationProperties.Name="直接返回按键" />
                                     </StackPanel>
                                 </Grid>
                                 <Grid ColumnSpacing="10">
                                     <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
-                                    <TextBlock Text="为当前窗口留线" VerticalAlignment="Center" />
+                                    <TextBlock Text="标记当前窗口" VerticalAlignment="Center" />
                                     <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8">
                                         <TextBlock Text="Ctrl + Alt +" VerticalAlignment="Center" Style="{StaticResource Muted}"/>
-                                        <ComboBox x:Name="SaveKey" Width="66" SelectionChanged="SaveKeyChanged" AutomationProperties.Name="留线按键" />
+                                        <ComboBox x:Name="SaveKey" Width="66" SelectionChanged="SaveKeyChanged" AutomationProperties.Name="标记窗口按键" />
                                     </StackPanel>
                                 </Grid>
                                 <Button x:Name="RetryShortcuts" Content="重试注册快捷键" Click="RetryShortcutClick" />
@@ -277,7 +184,7 @@
                             <StackPanel Spacing="10">
                                 <ToggleSwitch x:Name="AutoCheck" Header="启动时检查更新" Toggled="AutoCheckChanged" />
                                 <Button Content="清空会话" Click="ClearSession" />
-                                <TextBlock Text="窗口标题、停留时长和备注仅保存在内存中，退出应用即清空。"
+                                <TextBlock Text="窗口标题、停留时长和标记仅保存在内存中，退出应用即清空。"
                                     Style="{StaticResource Muted}" FontSize="12" />
                             </StackPanel>
                         </Border>
