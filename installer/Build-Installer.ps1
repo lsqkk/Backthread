@@ -3,7 +3,7 @@ param(
     [Parameter(Mandatory = $true)][string]$PublishDir,
     [Parameter(Mandatory = $true)][string]$OutputDir,
     [string]$IsccPath,
-    [ValidatePattern('^\d+\.\d+\.\d+$')][string]$Version = '1.0.0'
+    [ValidatePattern('^\d+\.\d+\.\d+$')][string]$Version = '1.1.0'
 )
 
 $ErrorActionPreference = 'Stop'
@@ -52,5 +52,6 @@ if ($LASTEXITCODE -ne 0) { throw "ISCC failed (exit code $LASTEXITCODE)." }
 $file = Join-Path $output "Backthread-$Version-win-x64-Setup.exe"
 if (-not (Test-Path -LiteralPath $file -PathType Leaf)) { throw "ISCC did not produce $file." }
 $sha = (Get-FileHash -LiteralPath $file -Algorithm SHA256).Hash.ToLowerInvariant()
-Set-Content -LiteralPath "$file.sha256" -Value "$sha  $([IO.Path]::GetFileName($file))" -Encoding Ascii
+$name = [IO.Path]::GetFileName($file)
+[IO.File]::WriteAllText("$file.sha256", "$sha  $name`n", [Text.Encoding]::ASCII)
 Write-Output $file

@@ -2,7 +2,7 @@
   #error Pass /DPublishDir with the absolute path to the self-contained win-x64 publish directory.
 #endif
 #ifndef BuildVersion
-  #define BuildVersion "1.0.0"
+  #define BuildVersion "1.1.0"
 #endif
 
 [Setup]
@@ -37,9 +37,12 @@ Name: "zhcn"; MessagesFile: "compiler:Default.isl,ChineseSimplified.isl"
 
 [CustomMessages]
 english.RunBackthread=Launch Backthread
-english.CloseBackthread=Backthread is running. Close its main window, then click Retry to continue uninstalling.
+english.CloseBackthread=Backthread is running. Right-click its tray icon, choose Exit, then click Retry to continue uninstalling.
 zhcn.RunBackthread=启动回线
-zhcn.CloseBackthread=回线仍在运行。请关闭回线主窗口，再点击「重试」继续卸载。
+zhcn.CloseBackthread=回线仍在运行。请右击托盘图标，选择「退出回线」，再点击「重试」继续卸载。
+
+[Registry]
+Root: HKCU; Subkey: "Software\Microsoft\Windows\CurrentVersion\Run"; ValueType: none; ValueName: "Backthread"; Flags: uninsdeletevalue
 
 [Files]
 Source: "{#PublishDir}\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs

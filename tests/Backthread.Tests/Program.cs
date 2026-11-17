@@ -28,6 +28,16 @@ Require(noGap.Suggest(620_000, _ => true) is null, "Must not count an idle gap a
 for (int i = 0; i < 100; i++) noGap.Observe(i % 2 == 0 ? a : b, 621_000 + i);
 Require(noGap.Segments.Count == Trail.MaxSegments, "Trail must stay bounded.");
 
+var recent = new Trail();
+recent.Observe(a, 0);
+recent.Observe(b, 100);
+recent.Observe(renamed, 200);
+recent.Observe(successor, 300);
+Require(recent.Recent(successor, _ => true).Select(s => s.Window).SequenceEqual([renamed, b]),
+    "Quick switch must include brief visits, deduplicate by live identity, and exclude the current window.");
+Require(recent.Recent(null, window => window != renamed).Select(s => s.Window).SequenceEqual([successor, b]),
+    "Closed targets must be skipped, including older snapshots for the same identity.");
+
 var savedAt = DateTimeOffset.UnixEpoch;
 Require(t.Push(a, " review appendix ", savedAt), "Must save first checkpoint.");
 Require(t.Push(b, "answer message", savedAt), "Must save nested checkpoint.");

@@ -8,151 +8,311 @@
             <ResourceDictionary>
                 <ResourceDictionary.ThemeDictionaries>
                     <ResourceDictionary x:Key="Light">
-                        <SolidColorBrush x:Key="Hero" Color="#E6F4EE"/>
-                        <SolidColorBrush x:Key="Signal" Color="#14674F"/>
-                        <SolidColorBrush x:Key="BrandTile" Color="#D1EEE0"/>
+                        <SolidColorBrush x:Key="CanvasBrush" Color="#F3F6F4" />
+                        <SolidColorBrush x:Key="PanelBrush" Color="#FFFFFF" />
+                        <SolidColorBrush x:Key="LineBrush" Color="#DFE7E2" />
+                        <SolidColorBrush x:Key="MutedBrush" Color="#515E59" />
+                        <SolidColorBrush x:Key="BrandBrush" Color="#14654D" />
+                        <SolidColorBrush x:Key="TintBrush" Color="#DDF3E8" />
+                        <SolidColorBrush x:Key="SystemControlHighlightAccentBrush" Color="#14654D" />
                     </ResourceDictionary>
                     <ResourceDictionary x:Key="Dark">
-                        <SolidColorBrush x:Key="Hero" Color="#172620"/>
-                        <SolidColorBrush x:Key="Signal" Color="#91E6BF"/>
-                        <SolidColorBrush x:Key="BrandTile" Color="#244137"/>
+                        <SolidColorBrush x:Key="CanvasBrush" Color="#131A18" />
+                        <SolidColorBrush x:Key="PanelBrush" Color="#1C2522" />
+                        <SolidColorBrush x:Key="LineBrush" Color="#34413D" />
+                        <SolidColorBrush x:Key="MutedBrush" Color="#A9BBB2" />
+                        <SolidColorBrush x:Key="BrandBrush" Color="#A7EBCB" />
+                        <SolidColorBrush x:Key="TintBrush" Color="#234639" />
+                        <SolidColorBrush x:Key="SystemControlHighlightAccentBrush" Color="#A7EBCB" />
                     </ResourceDictionary>
                     <ResourceDictionary x:Key="HighContrast">
-                        <SolidColorBrush x:Key="Hero" Color="{ThemeResource SystemColorWindowColor}"/>
-                        <SolidColorBrush x:Key="Signal" Color="{ThemeResource SystemColorWindowTextColor}"/>
-                        <SolidColorBrush x:Key="BrandTile" Color="{ThemeResource SystemColorWindowColor}"/>
+                        <SolidColorBrush x:Key="CanvasBrush" Color="{ThemeResource SystemColorWindowColor}" />
+                        <SolidColorBrush x:Key="PanelBrush" Color="{ThemeResource SystemColorWindowColor}" />
+                        <SolidColorBrush x:Key="LineBrush" Color="{ThemeResource SystemColorWindowTextColor}" />
+                        <SolidColorBrush x:Key="MutedBrush" Color="{ThemeResource SystemColorWindowTextColor}" />
+                        <SolidColorBrush x:Key="BrandBrush" Color="{ThemeResource SystemColorWindowTextColor}" />
+                        <SolidColorBrush x:Key="TintBrush" Color="{ThemeResource SystemColorWindowColor}" />
                     </ResourceDictionary>
                 </ResourceDictionary.ThemeDictionaries>
-                <Style x:Key="Quiet" TargetType="TextBlock">
-                    <Setter Property="Foreground" Value="{ThemeResource TextFillColorSecondaryBrush}"/>
-                    <Setter Property="TextWrapping" Value="Wrap"/>
+                <Style x:Key="PageTitle" TargetType="TextBlock">
+                    <Setter Property="FontSize" Value="34" />
+                    <Setter Property="FontWeight" Value="SemiBold" />
                 </Style>
+                <Style x:Key="Muted" TargetType="TextBlock">
+                    <Setter Property="Foreground" Value="{ThemeResource MutedBrush}" />
+                    <Setter Property="TextWrapping" Value="Wrap" />
+                </Style>
+                <Style x:Key="Card" TargetType="Border">
+                    <Setter Property="Background" Value="{ThemeResource PanelBrush}" />
+                    <Setter Property="BorderBrush" Value="{ThemeResource LineBrush}" />
+                    <Setter Property="BorderThickness" Value="1" />
+                    <Setter Property="CornerRadius" Value="12" />
+                    <Setter Property="Padding" Value="18" />
+                </Style>
+                <Style x:Key="ResultContainer" TargetType="ListViewItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                    <Setter Property="Padding" Value="10,6" />
+                    <Setter Property="MinHeight" Value="52" />
+                </Style>
+                <DataTemplate x:Key="ResultTemplate">
+                    <Grid ColumnSpacing="11" MinHeight="40">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="38" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Border Width="36" Height="36" CornerRadius="9" Background="{ThemeResource TintBrush}" VerticalAlignment="Center">
+                            <FontIcon Glyph="{Binding Icon}" FontSize="15" Foreground="{ThemeResource BrandBrush}" />
+                        </Border>
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="3">
+                            <TextBlock Text="{Binding Title}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" />
+                            <TextBlock Text="{Binding Detail}" FontSize="12" Foreground="{ThemeResource MutedBrush}" TextTrimming="CharacterEllipsis" />
+                        </StackPanel>
+                        <TextBlock Grid.Column="2" Text="{Binding Badge}" VerticalAlignment="Center"
+                            Foreground="{ThemeResource BrandBrush}" FontSize="12" />
+                    </Grid>
+                </DataTemplate>
             </ResourceDictionary>
         </Grid.Resources>
-        <Grid RowSpacing="0">
+
+        <Grid x:Name="Palette" RowSpacing="12" Padding="19,15,19,15" Visibility="Collapsed"
+            Background="{ThemeResource CanvasBrush}">
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <Grid Padding="24,15" ColumnSpacing="18">
+            <Grid ColumnSpacing="10">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="34" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <StackPanel Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
-                    <Border Width="42" Height="42" CornerRadius="12" Background="{ThemeResource BrandTile}">
-                        <Viewbox Width="23" Height="23">
-                            <Path Data="M 20,5 L 11,5 C 6,5 4,8 4,12 C 4,16 7,19 11,19 L 20,19 M 16,1 L 20,5 L 16,9"
-                                  Stroke="{ThemeResource Signal}" StrokeThickness="2.3" StrokeStartLineCap="Round" StrokeEndLineCap="Round" StrokeLineJoin="Round"/>
-                        </Viewbox>
-                    </Border>
-                    <StackPanel VerticalAlignment="Center">
-                        <TextBlock Text="回线" FontSize="22" FontWeight="SemiBold"/>
-                        <TextBlock Text="B A C K T H R E A D" FontSize="10" Foreground="{ThemeResource Signal}"/>
-                    </StackPanel>
-                </StackPanel>
-                <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
-                    <Button x:Name="PauseButton" Content="暂停记录" Click="TogglePause"/>
-                    <Button Content="···" Padding="10,4" AutomationProperties.Name="更多操作">
-                        <Button.Flyout>
-                            <MenuFlyout>
-                                <MenuFlyoutItem Text="清空本次记录" Click="ClearSession"/>
-                                <MenuFlyoutItem Text="快捷键与隐私" Click="ShowHelp"/>
-                            </MenuFlyout>
-                        </Button.Flyout>
-                    </Button>
-                </StackPanel>
+                <Border Height="32" CornerRadius="8" Background="{ThemeResource TintBrush}">
+                    <FontIcon Glyph="&#xE7A7;" FontSize="15" Foreground="{ThemeResource BrandBrush}" />
+                </Border>
+                <TextBlock Grid.Column="1" Text="回线" FontSize="19" FontWeight="SemiBold" VerticalAlignment="Center" />
+                <Button Grid.Column="2" Content="工作台" Click="OpenWorkspaceClick" />
+                <Button Grid.Column="3" Click="ClosePaletteClick" AutomationProperties.Name="关闭快速切换">
+                    <FontIcon Glyph="&#xE711;" FontSize="12" />
+                </Button>
             </Grid>
+            <TextBox x:Name="Query" Grid.Row="1" PlaceholderText="搜索窗口、应用或备注" TextChanged="SearchChanged"
+                AutomationProperties.Name="搜索窗口、应用或备注" />
+            <Grid Grid.Row="2">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <ToggleButton x:Name="RecentTab" Content="最近窗口" Click="RecentClick" IsChecked="True" />
+                    <ToggleButton x:Name="StackTab" Content="复工栈" Click="StackClick" />
+                </StackPanel>
+                <TextBlock x:Name="PaletteCount" HorizontalAlignment="Right" VerticalAlignment="Center" Style="{StaticResource Muted}" FontSize="12" />
+            </Grid>
+            <Border Grid.Row="3" Style="{StaticResource Card}" Padding="4">
+                <Grid>
+                    <ListView x:Name="PaletteList" IsItemClickEnabled="True" ItemClick="PaletteItemClick"
+                        SelectionChanged="PaletteSelectionChanged" ItemTemplate="{StaticResource ResultTemplate}" ItemContainerStyle="{StaticResource ResultContainer}"
+                        AutomationProperties.Name="窗口切换结果" />
+                    <TextBlock x:Name="PaletteEmpty" Margin="22" VerticalAlignment="Center" HorizontalAlignment="Center"
+                        TextAlignment="Center" Style="{StaticResource Muted}" IsHitTestVisible="False" />
+                </Grid>
+            </Border>
+            <Grid Grid.Row="4" ColumnSpacing="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock x:Name="PaletteStatus" Style="{StaticResource Muted}" FontSize="12" VerticalAlignment="Center"
+                    AutomationProperties.LiveSetting="Polite" />
+                <Button x:Name="PaletteReturn" Grid.Column="1" Content="返回  ↵" Click="PaletteReturnClick"
+                    Style="{StaticResource AccentButtonStyle}" />
+            </Grid>
+        </Grid>
 
-            <ScrollViewer Grid.Row="1" HorizontalScrollMode="Disabled" HorizontalScrollBarVisibility="Disabled"
-                          VerticalScrollBarVisibility="Auto">
-                <Grid x:Name="Columns" Padding="24,6,24,24" ColumnSpacing="16" RowSpacing="16">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1.45*"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
+        <Grid x:Name="Workspace" Padding="0,10,0,0" Background="{ThemeResource CanvasBrush}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="190" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Border Background="{ThemeResource PanelBrush}" BorderBrush="{ThemeResource LineBrush}" BorderThickness="0,0,1,0">
+                <Grid Padding="16,22,16,15" RowSpacing="22">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
-                    <VisualStateManager.VisualStateGroups>
-                        <VisualStateGroup>
-                            <VisualState>
-                                <VisualState.StateTriggers><AdaptiveTrigger MinWindowWidth="805"/></VisualState.StateTriggers>
-                            </VisualState>
-                            <VisualState>
-                                <VisualState.StateTriggers><AdaptiveTrigger MinWindowWidth="0"/></VisualState.StateTriggers>
-                                <VisualState.Setters>
-                                    <Setter Target="MainColumn.(Grid.ColumnSpan)" Value="2"/>
-                                    <Setter Target="StackColumn.(Grid.Column)" Value="0"/>
-                                    <Setter Target="StackColumn.(Grid.ColumnSpan)" Value="2"/>
-                                    <Setter Target="StackColumn.(Grid.Row)" Value="1"/>
-                                </VisualState.Setters>
-                            </VisualState>
-                        </VisualStateGroup>
-                    </VisualStateManager.VisualStateGroups>
-
-                    <StackPanel x:Name="MainColumn" Spacing="16">
-                        <Border Background="{ThemeResource Hero}" Padding="20,18" CornerRadius="16"
-                                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
-                            <StackPanel Spacing="8">
-                                <TextBlock Text="↶  建议回访 / 01" FontSize="13" Foreground="{ThemeResource Signal}" FontWeight="SemiBold"/>
-                                <TextBlock x:Name="CandidateTitle" Text="被打断了？从这里接着做。" FontSize="27"
-                                           FontWeight="SemiBold" TextTrimming="CharacterEllipsis" MaxLines="2" TextWrapping="Wrap"/>
-                                <TextBlock x:Name="CandidateDetails" Style="{StaticResource Quiet}"
-                                           Text="使用一阵后，回线会在这里指出你刚才停留较久的窗口。"/>
-                                <Button x:Name="ReturnButton" Style="{StaticResource AccentButtonStyle}" Content="回到原窗口  →"
-                                        Click="ReturnToCandidate" IsEnabled="False" Margin="0,5,0,0"/>
-                            </StackPanel>
+                    <StackPanel Orientation="Horizontal" Spacing="10" Margin="4,0">
+                        <Border Width="36" Height="36" Background="{ThemeResource TintBrush}" CornerRadius="8">
+                            <FontIcon Glyph="&#xE7A7;" Foreground="{ThemeResource BrandBrush}" FontSize="16" />
                         </Border>
-                        <StackPanel Spacing="7">
-                            <Grid>
-                                <TextBlock Text="切换轨迹" FontSize="20" FontWeight="SemiBold"/>
-                                <TextBlock x:Name="TrailCount" Text="最近 0 段" HorizontalAlignment="Right" VerticalAlignment="Center"
-                                           Style="{StaticResource Quiet}" FontSize="12"/>
-                            </Grid>
-                            <TextBlock Text="从新到旧 · 点一段，回到那扇窗口。" Style="{StaticResource Quiet}" FontSize="13"/>
-                            <StackPanel x:Name="TrailRows" Spacing="5" Margin="0,3,0,0"/>
+                        <StackPanel>
+                            <TextBlock Text="回线" FontSize="19" FontWeight="SemiBold" />
+                            <TextBlock Text="Backthread" Style="{StaticResource Muted}" FontSize="11" />
                         </StackPanel>
                     </StackPanel>
+                    <ListView x:Name="Navigation" Grid.Row="1" SelectionChanged="Navigate" SelectedIndex="0"
+                        ItemContainerStyle="{StaticResource ResultContainer}" AutomationProperties.Name="工作台导航">
+                        <ListViewItem><StackPanel Orientation="Horizontal" Spacing="10"><FontIcon Glyph="&#xE81C;" FontSize="15"/><TextBlock Text="窗口轨迹"/></StackPanel></ListViewItem>
+                        <ListViewItem><StackPanel Orientation="Horizontal" Spacing="10"><FontIcon Glyph="&#xE718;" FontSize="15"/><TextBlock Text="复工栈"/></StackPanel></ListViewItem>
+                        <ListViewItem><StackPanel Orientation="Horizontal" Spacing="10"><FontIcon Glyph="&#xE713;" FontSize="15"/><TextBlock Text="设置"/></StackPanel></ListViewItem>
+                        <ListViewItem><StackPanel Orientation="Horizontal" Spacing="10"><FontIcon Glyph="&#xE946;" FontSize="15"/><TextBlock Text="关于"/></StackPanel></ListViewItem>
+                    </ListView>
+                    <StackPanel Grid.Row="2" Margin="4,0" Spacing="9">
+                        <TextBlock x:Name="RecordingState" Style="{StaticResource Muted}" FontSize="12" />
+                        <Button x:Name="PauseButton" Click="TogglePauseClick" HorizontalAlignment="Stretch" Content="暂停记录" />
+                    </StackPanel>
+                </Grid>
+            </Border>
 
-                    <Border x:Name="StackColumn" Grid.Column="1" CornerRadius="16" Padding="17"
-                            VerticalAlignment="Top" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-                            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
-                        <StackPanel Spacing="11">
-                            <TextBlock Text="↧  手动留线 / 02" FontSize="13" Foreground="{ThemeResource Signal}" FontWeight="SemiBold"/>
-                            <TextBlock Text="复工栈" FontSize="23" FontWeight="SemiBold"/>
-                            <TextBlock Text="先把这件事留在栈顶。临时任务也被打断时，再压入一层。回来时，先接最近的一件。" Style="{StaticResource Quiet}"/>
-                            <Button x:Name="ComposeButton" Content="＋ 添加检查点" Click="OpenComposerClick"/>
-                            <Border x:Name="Composer" Visibility="Collapsed" Padding="12" CornerRadius="10" Background="{ThemeResource Hero}">
-                                <StackPanel Spacing="8">
-                                    <TextBlock x:Name="ComposeTarget" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" MaxLines="2" FontWeight="SemiBold"/>
-                                    <TextBox x:Name="NoteBox" Header="下一步做什么？" PlaceholderText="例如：从第 3 段继续修改" MaxLength="160"/>
-                                    <StackPanel Orientation="Horizontal" Spacing="8">
-                                        <Button x:Name="SaveButton" Style="{StaticResource AccentButtonStyle}" Content="压入栈顶" Click="SaveCheckpoint"/>
-                                        <Button Content="取消" Click="CancelCheckpoint"/>
-                                    </StackPanel>
-                                </StackPanel>
-                            </Border>
-                            <StackPanel x:Name="StackRows" Spacing="7"/>
-                            <StackPanel x:Name="StackActions" Orientation="Horizontal" Spacing="8" Visibility="Collapsed">
-                                <Button x:Name="PopButton" Content="返回并出栈" Click="ResumeTop"/>
-                                <Button Content="移除栈顶" Click="DiscardTop"/>
+            <Grid Grid.Column="1" Padding="26,22,26,16" RowSpacing="14">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid ColumnSpacing="12">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock x:Name="PageHeading" Style="{StaticResource PageTitle}" />
+                    <Button x:Name="WorkspaceQuick" Grid.Column="1" VerticalAlignment="Center" Click="OpenPaletteClick" />
+                </Grid>
+
+                <Grid x:Name="HistoryPage" Grid.Row="1" RowSpacing="13">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Border Style="{StaticResource Card}" Background="{ThemeResource TintBrush}">
+                        <Grid ColumnSpacing="12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Spacing="5">
+                                <TextBlock x:Name="SuggestionHeading" FontSize="12" Foreground="{ThemeResource BrandBrush}" />
+                                <TextBlock x:Name="SuggestionTitle" FontSize="19" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" />
+                                <TextBlock x:Name="SuggestionDetail" Style="{StaticResource Muted}" FontSize="12" />
                             </StackPanel>
-                        </StackPanel>
+                            <Button x:Name="SuggestionButton" Grid.Column="1" Content="返回窗口" VerticalAlignment="Center"
+                                Click="ReturnSuggestion" Style="{StaticResource AccentButtonStyle}" />
+                        </Grid>
+                    </Border>
+                    <TextBlock x:Name="HistoryHeading" Grid.Row="1" Text="最近切换" FontWeight="SemiBold" />
+                    <Border Grid.Row="2" Style="{StaticResource Card}" Padding="4">
+                        <Grid>
+                            <ListView x:Name="HistoryList" IsItemClickEnabled="True" SelectionMode="None"
+                                ItemClick="HistoryItemClick" KeyDown="HistoryKeyDown" ItemTemplate="{StaticResource ResultTemplate}" ItemContainerStyle="{StaticResource ResultContainer}"
+                                AutomationProperties.Name="窗口轨迹，回车返回所选窗口" />
+                            <TextBlock x:Name="HistoryEmpty" Text="切换几个窗口后，就能从这里返回。" HorizontalAlignment="Center"
+                                VerticalAlignment="Center" Style="{StaticResource Muted}" IsHitTestVisible="False" />
+                        </Grid>
                     </Border>
                 </Grid>
-            </ScrollViewer>
 
-            <Border Grid.Row="2" Background="{ThemeResource LayerFillColorDefaultBrush}" Padding="24,9"
-                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="0,1,0,0">
-                <StackPanel Spacing="3">
-                    <TextBlock x:Name="Status" AutomationProperties.LiveSetting="Polite" TextWrapping="Wrap" FontSize="13"/>
-                    <TextBlock x:Name="Hint" Text="只记本次会话 · 不截屏 · 最小化后继续工作"
-                               FontSize="11" Style="{StaticResource Quiet}"/>
-                </StackPanel>
-            </Border>
+                <Grid x:Name="CheckpointsPage" Grid.Row="1" RowSpacing="12" Visibility="Collapsed">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <TextBlock x:Name="CheckpointHint" Style="{StaticResource Muted}" />
+                    <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="8">
+                        <Button x:Name="ResumeButton" Content="返回栈顶" Click="ResumeClick" Style="{StaticResource AccentButtonStyle}" />
+                        <Button x:Name="NoteButton" Content="为刚才的窗口留线" Click="ComposeClick" />
+                        <Button x:Name="DiscardButton" Content="移除栈顶" Click="DiscardClick" />
+                    </StackPanel>
+                    <Border Grid.Row="2" Padding="4" Style="{StaticResource Card}">
+                        <Grid>
+                            <ListView x:Name="CheckpointList" SelectionMode="None" ItemTemplate="{StaticResource ResultTemplate}"
+                                ItemContainerStyle="{StaticResource ResultContainer}" AutomationProperties.Name="复工检查点" />
+                            <TextBlock x:Name="CheckpointEmpty" Text="还没有检查点。" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                Style="{StaticResource Muted}" IsHitTestVisible="False" />
+                        </Grid>
+                    </Border>
+                </Grid>
+
+                <ScrollViewer x:Name="SettingsPage" Grid.Row="1" Visibility="Collapsed">
+                    <StackPanel Spacing="14">
+                        <TextBlock Text="快捷键" FontSize="17" FontWeight="SemiBold" />
+                        <Border Style="{StaticResource Card}">
+                            <StackPanel Spacing="10">
+                                <Grid ColumnSpacing="10">
+                                    <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                                    <TextBlock Text="呼出快速切换" VerticalAlignment="Center" />
+                                    <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8">
+                                        <TextBlock Text="Ctrl + Alt +" VerticalAlignment="Center" Style="{StaticResource Muted}"/>
+                                        <ComboBox x:Name="SwitchKey" Width="66" SelectionChanged="SwitchKeyChanged" AutomationProperties.Name="快速切换按键" />
+                                    </StackPanel>
+                                </Grid>
+                                <Grid ColumnSpacing="10">
+                                    <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                                    <TextBlock Text="为当前窗口留线" VerticalAlignment="Center" />
+                                    <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8">
+                                        <TextBlock Text="Ctrl + Alt +" VerticalAlignment="Center" Style="{StaticResource Muted}"/>
+                                        <ComboBox x:Name="SaveKey" Width="66" SelectionChanged="SaveKeyChanged" AutomationProperties.Name="留线按键" />
+                                    </StackPanel>
+                                </Grid>
+                                <Button x:Name="RetryShortcuts" Content="重试注册快捷键" Click="RetryShortcutClick" />
+                                <TextBlock x:Name="ShortcutStatus" Style="{StaticResource Muted}" FontSize="12" AutomationProperties.LiveSetting="Polite" />
+                            </StackPanel>
+                        </Border>
+                        <TextBlock Text="启动与外观" FontSize="17" FontWeight="SemiBold" />
+                        <Border Style="{StaticResource Card}">
+                            <StackPanel Spacing="8">
+                                <ToggleSwitch x:Name="Startup" Header="随 Windows 登录启动" Toggled="StartupChanged" />
+                                <ToggleSwitch x:Name="KeepRunning" Header="关闭窗口后驻留托盘" Toggled="KeepRunningChanged" />
+                                <ComboBox x:Name="Theme" Header="外观" SelectionChanged="ThemeChanged" MinWidth="150">
+                                    <ComboBoxItem Content="跟随系统" Tag="Default" />
+                                    <ComboBoxItem Content="浅色" Tag="Light" />
+                                    <ComboBoxItem Content="深色" Tag="Dark" />
+                                </ComboBox>
+                            </StackPanel>
+                        </Border>
+                        <TextBlock Text="会话与更新" FontSize="17" FontWeight="SemiBold" />
+                        <Border Style="{StaticResource Card}">
+                            <StackPanel Spacing="10">
+                                <ToggleSwitch x:Name="AutoCheck" Header="启动时检查更新" Toggled="AutoCheckChanged" />
+                                <Button Content="清空会话" Click="ClearSession" />
+                                <TextBlock Text="窗口标题、停留时长和备注仅保存在内存中，退出应用即清空。"
+                                    Style="{StaticResource Muted}" FontSize="12" />
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+
+                <ScrollViewer x:Name="AboutPage" Grid.Row="1" Visibility="Collapsed">
+                    <StackPanel Spacing="14">
+                        <Border Style="{StaticResource Card}" Background="{ThemeResource TintBrush}">
+                            <StackPanel Spacing="6">
+                                <TextBlock Text="回线  Backthread" FontSize="25" FontWeight="SemiBold" />
+                                <TextBlock x:Name="VersionLabel" Foreground="{ThemeResource BrandBrush}" />
+                                <TextBlock Text="处理完插曲，回到刚才的窗口。" Style="{StaticResource Muted}" />
+                            </StackPanel>
+                        </Border>
+                        <Border Style="{StaticResource Card}">
+                            <StackPanel Spacing="10">
+                                <TextBlock Text="应用更新" FontSize="17" FontWeight="SemiBold" />
+                                <TextBlock x:Name="UpdateStatus" Text="检查 GitHub 上最新的稳定版本。" Style="{StaticResource Muted}" AutomationProperties.LiveSetting="Polite" />
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <Button x:Name="CheckButton" Content="检查更新" Click="CheckUpdateClick" />
+                                    <HyperlinkButton x:Name="DownloadUpdate" Content="下载安装包" Visibility="Collapsed" />
+                                    <HyperlinkButton x:Name="UpdateNotes" Content="版本说明" Visibility="Collapsed" />
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <HyperlinkButton Content="应用官网" NavigateUri="https://lsqkk.github.io/Backthread/" />
+                            <HyperlinkButton Content="源代码与反馈" NavigateUri="https://github.com/lsqkk/Backthread" />
+                        </StackPanel>
+                    </StackPanel>
+                </ScrollViewer>
+                <TextBlock x:Name="WorkspaceStatus" Grid.Row="2" Style="{StaticResource Muted}" FontSize="12"
+                    AutomationProperties.LiveSetting="Polite" />
+            </Grid>
         </Grid>
     </Grid>
 </Window>

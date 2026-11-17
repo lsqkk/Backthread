@@ -49,6 +49,17 @@ internal sealed class Trail
             now - end <= LookbackSeconds * 1000L && s.Seconds(now) >= MinFocusSeconds &&
             alive(s.Window));
 
+    internal IEnumerable<Segment> Recent(LiveWindow? current, Func<LiveWindow, bool> available)
+    {
+        var seen = new HashSet<(nint Handle, int ProcessId, nint Identity)>();
+        foreach (var segment in segments.AsEnumerable().Reverse())
+        {
+            var window = segment.Window;
+            if (!Same(current, window) && seen.Add((window.Handle, window.ProcessId, window.Identity)) && available(window))
+                yield return segment;
+        }
+    }
+
     internal bool Push(LiveWindow window, string note, DateTimeOffset now)
     {
         if (checkpoints.Count >= MaxCheckpoints) return false;

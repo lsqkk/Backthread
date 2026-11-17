@@ -1,0 +1,86 @@
+name: Build and release Windows app
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-2022
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '8.0.419'
+      - name: Restore and test
+        run: |
+          dotnet restore src/Backthread/Backthread.csproj --locked-mode
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          dotnet run --project tests/Backthread.Tests -c Release
+      - name: Publish self-contained Windows app
+        run: dotnet publish src/Backthread/Backthread.csproj -c Release -r win-x64 --no-restore -o artifacts/publish
+      - name: Check release tag
+        if: github.ref_type == 'tag'
+        shell: pwsh
+        run: |
+          $version = ([xml](Get-Content src/Backthread/Backthread.csproj -Raw)).Project.PropertyGroup.Version
+          if ($version -notmatch '^\d+\.\d+\.\d+$' -or "v$version" -cne $env:GITHUB_REF_NAME) {
+            throw "Tag '$env:GITHUB_REF_NAME' must match the app version '$version'."
+          }
+          "BACKTHREAD_VERSION=$version" >> $env:GITHUB_ENV
+      - name: Install Inno Setup
+        if: github.ref_type == 'tag'
+        run: |
+          $setup = Join-Path $env:RUNNER_TEMP 'innosetup-6.7.4.exe'
+          $inno = Join-Path $env:RUNNER_TEMP 'inno'
+          Invoke-WebRequest 'https://github.com/jrsoftware/issrc/releases/download/is-6_7_4/innosetup-6.7.4.exe' -OutFile $setup
+          if ((Get-FileHash -LiteralPath $setup -Algorithm SHA256).Hash -ne 'a549929319f9120716677c685535ca4671e4b937b5fdc87e2585f32d8eb30e8c') {
+            throw 'Inno Setup checksum mismatch.'
+          }
+          $process = Start-Process $setup -ArgumentList '/VERYSILENT', '/SUPPRESSMSGBOXES', '/NORESTART', '/PORTABLE=1', "/DIR=`"$inno`"" -Wait -PassThru -WindowStyle Hidden
+          if ($process.ExitCode -ne 0) { throw "Inno Setup exited with $($process.ExitCode)." }
+          "INNO_ISCC=$(Join-Path $inno 'ISCC.exe')" >> $env:GITHUB_ENV
+      - name: Build installer and checksum
+        if: github.ref_type == 'tag'
+        run: ./installer/Build-Installer.ps1 -PublishDir artifacts/publish -OutputDir artifacts/release -Version $env:BACKTHREAD_VERSION
+      - name: Upload installer
+        if: github.ref_type == 'tag'
+        uses: actions/upload-artifact@v4
+        with:
+          name: Backthread-installer
+          path: artifacts/release/Backthread-*
+          if-no-files-found: error
+
+  release:
+    if: github.ref_type == 'tag'
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/download-artifact@v4
+        with:
+          name: Backthread-installer
+          path: release
+      - name: Publish GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          version="${GITHUB_REF_NAME#v}"
+          installer="release/Backthread-$version-win-x64-Setup.exe"
+          (cd release && sha256sum --check "$(basename "$installer").sha256")
+          [[ -f "docs/release-$version.md" ]] && notes=(--notes-file "docs/release-$version.md") || notes=(--generate-notes)
+          gh release create "$GITHUB_REF_NAME" "$installer" "$installer.sha256" \
+            --verify-tag --title "Backthread $version" --latest "${notes[@]}"

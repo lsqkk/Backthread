@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="回线是为 Windows 11 打造的窗口回访工具。快捷呼出、搜索窗口、为中断留线。">
+  <meta name="theme-color" content="#101a16">
+  <title>回线 Backthread · 回到刚才的窗口</title>
+  <link rel="stylesheet" href="style.css">
+  <script defer src="demo.js"></script>
+</head>
+<body>
+  <header class="shell masthead">
+    <a class="brand" href="./" aria-label="回线 Backthread 首页"><span class="mark" aria-hidden="true">↶</span> 回线 <span>Backthread</span></a>
+    <nav aria-label="网站导航">
+      <a href="#workflow">使用方式</a>
+      <a href="https://github.com/lsqkk/Backthread">GitHub ↗</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="shell hero" aria-labelledby="headline">
+      <div class="intro">
+        <p class="platform">Windows 11 <span></span> x64</p>
+        <h1 id="headline">插曲结束。<br><em>接着刚才做。</em></h1>
+        <p class="summary">回完消息、查完资料，按 <kbd>Ctrl+Alt+J</kbd> 呼出浮窗。回线帮你找到中断前的那扇窗口。</p>
+        <div class="hero-actions">
+          <a class="cta" href="https://github.com/lsqkk/Backthread/releases/latest">下载 Windows 版 <span aria-hidden="true">↓</span></a>
+          <a class="secondary" href="#demo">试试浮窗 <span aria-hidden="true">↘</span></a>
+        </div>
+      </div>
+
+      <div class="preview" id="demo">
+        <div class="surface" aria-hidden="true">
+          <div class="mock-window back-window"><div></div><div></div><div></div></div>
+          <div class="mock-window front-window"><span id="mock-title">资料检索 · 浏览器</span><i></i><i></i><i></i><i></i></div>
+        </div>
+        <section class="palette" aria-label="快速切换交互演示">
+          <header class="palette-head"><span class="mark" aria-hidden="true">↶</span><strong>回线</strong><span class="sample">交互演示</span></header>
+          <label class="search"><span aria-hidden="true">⌕</span><input id="query" type="search" placeholder="搜索窗口或应用" aria-label="搜索示例窗口"></label>
+          <div class="pills" role="group" aria-label="结果来源">
+            <button type="button" id="recent" aria-pressed="true">最近窗口</button>
+            <button type="button" id="stack" aria-pressed="false">复工栈</button>
+          </div>
+          <div id="results" class="results">
+            <noscript><p class="empty">启用 JavaScript 体验搜索和窗口切换。</p></noscript>
+          </div>
+          <footer class="palette-foot">
+            <output id="feedback" aria-live="polite">↑ ↓ 选择 · ↵ 返回</output>
+            <button id="select" type="button">返回 <span aria-hidden="true">↵</span></button>
+          </footer>
+        </section>
+      </div>
+    </section>
+
+    <section class="light" id="workflow" aria-labelledby="workflow-title">
+      <div class="shell workflow">
+        <div>
+          <h2 id="workflow-title">中断之后，<br>有路可回。</h2>
+          <p>回线在托盘里工作，需要时才打开。</p>
+        </div>
+        <dl class="scenarios">
+          <div>
+            <dt>临时处理完，回原窗口</dt>
+            <dd><kbd>Ctrl+Alt+J</kbd> 呼出后直接回车。也可以搜索应用名或窗口标题，选中你要的那一扇。</dd>
+          </div>
+          <div>
+            <dt>出发之前，先留个检查点</dt>
+            <dd><kbd>Ctrl+Alt+K</kbd> 记住当前窗口。在浮窗按 <kbd>Ctrl+Tab</kbd> 切到复工栈，按最近留下的顺序接回任务。</dd>
+          </div>
+          <div>
+            <dt>掌控什么时候记录</dt>
+            <dd>从托盘暂停或退出，在工作台清空本次会话。窗口标题、停留时长和备注只留在内存中。</dd>
+          </div>
+        </dl>
+      </div>
+    </section>
+  </main>
+
+  <footer class="shell bottom">
+    <a class="brand" href="./"><span class="mark" aria-hidden="true">↶</span> 回线 <span>Backthread</span></a>
+    <div><a href="https://github.com/lsqkk/Backthread/releases">版本记录 ↗</a><a href="https://github.com/lsqkk/Backthread/issues">问题反馈 ↗</a><a href="https://github.com/lsqkk/Backthread/blob/main/LICENSE">MIT</a></div>
+  </footer>
+</body>
+</html>

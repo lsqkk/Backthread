@@ -13,13 +13,14 @@ public partial class App : Application
 
     protected override void OnLaunched(LaunchActivatedEventArgs args)
     {
-        // One dashboard per interactive session; relaunching its shortcut brings it forward.
+        bool background = Environment.GetCommandLineArgs().Contains("--background", StringComparer.OrdinalIgnoreCase);
+        // One instance per interactive session; a manual relaunch opens its workbench.
         const string key = @"Local\Backthread.Relaunch";
         signal = new EventWaitHandle(false, EventResetMode.AutoReset, key + ".Signal");
         gate = new Mutex(false, key + ".Gate", out bool first);
         if (!first)
         {
-            signal.Set();
+            if (!background) signal.Set();
             signal.Dispose();
             gate.Dispose();
             Exit();
@@ -37,6 +38,6 @@ public partial class App : Application
             gate.Dispose();
             window = null;
         };
-        window.OpenDashboard();
+        window.Start(background);
     }
 }

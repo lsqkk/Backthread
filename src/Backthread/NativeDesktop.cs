@@ -52,7 +52,7 @@ internal sealed class NativeDesktop : IDisposable
     private bool _draining;
     private bool _disposed;
 
-    internal NativeDesktop(nint ownerHwnd)
+    internal NativeDesktop(nint ownerHwnd, char returnKey, char checkpointKey)
     {
         _owner = ownerHwnd;
         _onWinEvent = OnWinEvent;
@@ -65,8 +65,8 @@ internal sealed class NativeDesktop : IDisposable
         // Native code keeps only function pointers. Keep this instance and
         // both managed delegates rooted until the subclass and hook are removed.
         _lifetime = GCHandle.Alloc(this);
-        ReturnHotkeyRegistered = RegisterHotKey(_owner, ReturnHotkey, ModAltControlNoRepeat, 'J');
-        CheckpointHotkeyRegistered = RegisterHotKey(_owner, CheckpointHotkey, ModAltControlNoRepeat, 'K');
+        ReturnHotkeyRegistered = RegisterHotKey(_owner, ReturnHotkey, ModAltControlNoRepeat, returnKey);
+        CheckpointHotkeyRegistered = RegisterHotKey(_owner, CheckpointHotkey, ModAltControlNoRepeat, checkpointKey);
         if (_dispatchMessage != 0)
             _hook = SetWinEventHook(EventSystemForeground, EventSystemForeground, 0, _onWinEvent, 0, 0, WinEventOutOfContext);
     }
@@ -74,12 +74,30 @@ internal sealed class NativeDesktop : IDisposable
     public event Action<LiveWindow?>? ForegroundChanged;
     public event Action? ReturnRequested;
     public event Action? CheckpointRequested;
+    internal Func<uint, nuint, nint, bool>? HandleShellMessage { get; set; }
 
     public bool IsTracking => _hook != 0;
     public bool ReturnHotkeyRegistered { get; private set; }
     public bool CheckpointHotkeyRegistered { get; private set; }
 
     public LiveWindow? GetForeground() => _disposed ? null : Describe(GetForegroundWindow());
+
+    internal bool ChangeShortcut(bool checkpoint, char previous, char next)
+    {
+        if (!_subclassed || _disposed) return false;
+        int id = checkpoint ? CheckpointHotkey : ReturnHotkey;
+        bool registered = checkpoint ? CheckpointHotkeyRegistered : ReturnHotkeyRegistered;
+        if (registered && previous == next) return true;
+        if (registered) UnregisterHotKey(_owner, id);
+        bool changed = RegisterHotKey(_owner, id, ModAltControlNoRepeat, next);
+        bool active = changed || (registered && RegisterHotKey(_owner, id, ModAltControlNoRepeat, previous));
+        if (checkpoint) CheckpointHotkeyRegistered = active;
+        else ReturnHotkeyRegistered = active;
+        return changed;
+    }
+
+    internal bool CanActivate(LiveWindow window) =>
+        IsAlive(window) && IsWindowVisible(window.Handle) && !IsCloaked(window.Handle);
 
     public bool IsAlive(LiveWindow window)
     {
@@ -244,6 +262,10 @@ internal sealed class NativeDesktop : IDisposable
                 DrainPending();
                 return 0;
             }
+            bool handled = false;
+            if (HandleShellMessage is { } handler)
+                InvokeSafely(() => handled = handler(message, wParam, lParam));
+            if (handled) return 0;
         }
 
         return DefSubclassProc(hwnd, message, wParam, lParam);

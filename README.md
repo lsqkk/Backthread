@@ -1,36 +1,41 @@
 # 回线 · Backthread
 
-**被打断了，接着刚才做。** 回线是原生 Windows 11 桌面应用。它把最近的窗口切换串成一条线，在你忙完临时任务后，帮你回到之前停留较久的那扇原窗口。不需要先创建工作区。
+**插曲结束，接着刚才做。** 回线是 Windows 11 x64 的窗口回访工具。回复消息、查完资料之后，用键盘回到中断前那扇仍然打开的窗口。
 
-比如：你在记事本里改方案，切到聊天回复一句，又到浏览器查了一页资料。按 **Ctrl+Alt+J** 打开回线，点「回到原窗口」，就能回到刚才那份方案。若预先知道要离开，按 **Ctrl+Alt+K** 留下「从第 3 段继续改」；临时任务也被打断时，再压一层，按相反顺序接回去。
+[下载 Windows 版](https://github.com/lsqkk/Backthread/releases/latest) · [在线试用浮窗](https://lsqkk.github.io/Backthread/) · [1.1.0 更新说明](docs/release-1.1.0.md)
 
-## 安装与上手
+## 两个快捷键
 
-1. 在 Windows 11 x64 上双击 `Backthread-1.0.0-win-x64-Setup.exe`。安装仅面向当前用户，包含所需应用运行时，不要求管理员权限或联网下载依赖。
-2. 从开始菜单打开「回线 Backthread」。最小化以后照常工作；跨应用活动开始后，轨迹便会出现。
-3. **Ctrl+Alt+J** 打开回线，可选建议回访或任意已记录的窗口；**Ctrl+Alt+K** 为按键时的窗口添加检查点（备注可选）。
-4. 若全局快捷键被其他程序占用，底栏会提示。可通过任务栏或开始菜单打开；也可从面板为刚才使用的窗口留线。
+| 默认快捷键 | 用法 |
+| --- | --- |
+| `Ctrl+Alt+J` | 在当时使用的屏幕上呼出置顶浮窗。回车返回预选窗口，方向键挑选，输入应用名或标题过滤。按 Esc 或再次按快捷键收起。 |
+| `Ctrl+Alt+K` | 立即把当前窗口压入复工栈。在浮窗内按 `Ctrl+Tab` 切到复工栈，回车返回栈顶。 |
 
-安装包未做生产环境代码签名。如 Windows 阻止运行，可先按发行页提供的 SHA-256 校验文件。在「设置 → 应用 → 已安装的应用」中卸载「回线 Backthread」。
+浮窗优先选中最近 15 分钟内停留至少 45 秒的可用窗口。没有符合条件的窗口时，直接预选最近访问的可用窗口。快速切换按窗口去重，访问时间很短的窗口也能找到。
 
-## 回线怎么选
+## 工作台与托盘
 
-- 初次启动后才开始记录。轨迹保留最近 60 段；每段是一个窗口连续位于前台的时间。同一应用的两扇窗口会分别记录。
-- 建议从最近 15 分钟内已结束的停留中，挑出时间最靠近现在、停留至少 45 秒、仍存活、且不是刚离开的当前工作窗口的一段。
-- 复工栈最多 12 层。成功回到目标后才移除栈顶；失效记录可手动移除。标题变化仍可找回同一个窗口；关闭重开则视为另一扇窗口。
-- 最小化继续工作，关闭即退出。没有截图、输入内容、联网、后台文件或历史库。标题、窗口焦点时长与手动备注仅在内存中。连续两分钟无输入就停止累计。可随时暂停记录或清空本次会话。
-- 窗口必须在本次会话中仍然存在。Windows 可能禁止前置另一虚拟桌面、权限更高或特殊程序的窗口；此时回线保留检查点并说明结果，不会尝试启动同名程序。请照常保存未保存的内容。
+- **窗口轨迹**保留本次会话最近 60 段前台活动。同一个应用的多扇窗口分别识别。
+- **复工栈**可加备注并管理栈顶，最多 12 层。成功回到原窗口后才出栈。
+- **设置**可更改全局快捷键、切换外观、启用开机启动和选择关闭时是否驻留托盘，也可以清空本次会话。
+- **关于**可检查 GitHub 上的稳定发行版，有更新时提供下载与版本说明。启动时自动检查可在设置中开启。
+- **托盘**左键打开快速切换，右键可打开工作台、暂停记录或退出。若默认快捷键被占用，可从托盘进入设置修改。
 
-## 构建
+窗口标题、停留时长和备注只保存在内存中。连续两分钟无输入后暂停累计时长。系统限制可能使某些虚拟桌面或更高权限的窗口无法返回，回线会保留对应的检查点。
 
-环境：Windows 11 x64、.NET SDK 8.0.419 或兼容的 .NET 8 SDK、Windows SDK 10.0.19041 或更新版。打包需 Inno Setup 6.7。
+## 安装与构建
+
+从发行页下载 `Backthread-1.1.0-win-x64-Setup.exe`。安装面向当前用户，自带运行时。安装包尚未做 Authenticode 签名，发行页同时提供 SHA-256 校验文件。卸载前先从托盘退出回线。
+
+使用 Windows 11 x64 和 .NET SDK 8.0.419 构建。本地打包需 Inno Setup 6.7.4。
 
 ```powershell
 dotnet restore .\src\Backthread\Backthread.csproj --locked-mode
-dotnet run --project .\tests\Backthread.Tests
+dotnet run --project .\tests\Backthread.Tests -c Release
 dotnet publish .\src\Backthread\Backthread.csproj -c Release -r win-x64 --no-restore -o .\artifacts\publish
+.\installer\Build-Installer.ps1 -PublishDir .\artifacts\publish -OutputDir .\artifacts\release
 ```
 
-可直接运行发布目录中的 `Backthread.exe`。从发布目录制作安装包请参见 [installer](installer)。
+GitHub Actions 在推送 `vX.Y.Z` 标签时构建并发布安装包与校验文件，标签须与项目版本一致。官网源文件位于 `site/`，通过 GitHub Pages Actions 部署。
 
-[选题与竞品调研](docs/research.md) · [验收计划](docs/acceptance.md) · [架构说明](docs/architecture.md) · [1.0.0 验证记录与 SHA-256](docs/release-1.0.0.md)
+[打包说明](installer) · [产品设计](docs/architecture.md) · [桌面验收流程](docs/acceptance.md)
